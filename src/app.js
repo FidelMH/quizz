@@ -1,3 +1,5 @@
+// Liste d'anime inclu dans le quizz
+// 
 const animeList=[
     {
         id : 813,
@@ -8,8 +10,13 @@ const animeList=[
         name : "Naruto: Shippuuden"
     },
 ]
+
+// Indice de la question en cours
 let currentQuestion = 0;
+//le score
 let score = 0;
+
+//liste des réponse
 const listeReponse = [
     {
         image:"src/img/senjougahara.png",
@@ -17,25 +24,21 @@ const listeReponse = [
         indice_reponse: 0
     },
     {
-        image:"src/img/senjougahara.png",
-        propositions:[1,2,3,4],
+        image:"src/img/araragi.png",
+        propositions:["Senjougahara Itagi","Araragi Koyomi","Hanekawa Tsubasa","Araragi Tsukihi"],
         indice_reponse: 1
     },
     {
-        image:"src/img/senjougahara.png",
-        propositions:[1,2,3,4],
+        image:"src/img/hanekawa.png",
+        propositions:["Senjougahara Itagi","Araragi Koyomi","Hanekawa Tsubasa","Araragi Tsukihi"],
         indice_reponse: 2
     },
     {
-        image:"src/img/senjougahara.png",
-        propositions:[1,2,3,4],
+        image:"src/img/tsukihi.png",
+        propositions:["Senjougahara Itagi","Araragi Koyomi","Hanekawa Tsubasa","Araragi Tsukihi"],
         indice_reponse: 3
     },
-    {
-        image:"src/img/senjougahara.png",
-        propositions:[1,2,3,4],
-        indice_reponse: 2
-    },
+
 ]
 // Fetch best anime
 async function getBestAnime(){
@@ -64,6 +67,7 @@ function randInt(max){
 
 // Boutons réponse
 // Gestion de la selection d'item de la liste
+// highlight la réponse séléctionnée
 let currentButtonCheck = 0;
 let responses = document.querySelectorAll('.reponse')
 responses[currentButtonCheck].classList.add('active')
@@ -78,17 +82,18 @@ responses.forEach((response,index,array) =>{
     })
 })
 
-function afficherListeReponse(){
+// Afficher la liste des réponses
+function afficherReponse(){
     responses.forEach((response,index,array) => {
         response.textContent = listeReponse[currentQuestion].propositions[index];
     })
 }
 
+// Evenement du bouton valider
 const validerBtn = document.querySelector('#valider')
 let alert = document.querySelector("#msgAlert")
 validerBtn.addEventListener('click', (e) =>{
     e.target.setAttribute("disabled","")
-    
     document.querySelector('#next').classList.toggle("invisible",false)
     alert.classList.toggle('invisible',false)
     let indiceReponse = listeReponse[currentQuestion].indice_reponse;
@@ -104,26 +109,26 @@ validerBtn.addEventListener('click', (e) =>{
         alert.classList.toggle('alert-danger',true)
     }
 })
-afficherListeReponse()
 
 
-// NEXT BUTTON
+
+// Bouton next 
 document.querySelector('#next').addEventListener('click', (e)=> {
-    alert.classList.toggle('alert-danger',false)
-    alert.classList.toggle('alert-success',false)
+    
     currentQuestion++;
-    responses[currentButtonCheck].classList.remove('active')
-    currentButtonCheck = 0;
+    
+    resetVue()
     if(currentQuestion < listeReponse.length){
         validerBtn.removeAttribute("disabled")
         document.querySelector('#next').classList.toggle("invisible",true)
-        document.querySelector("#msgAlert").classList.toggle('invisible',true)
+        alert.classList.toggle('invisible',true)
         responses[currentButtonCheck].classList.add('active')
-        afficherListeReponse()
+        document.querySelector('#illustration').src = listeReponse[currentQuestion].image
+        afficherReponse()
     }
     else{
         alert.classList.toggle('alert-info',true)
-        alert.textContent = `Votre score est : ${score}`
+        alert.textContent = `Votre score est de: ${score} / ${listeReponse.length}`
         alert.classList.toggle('invisible',false)
     }
     
@@ -131,4 +136,13 @@ document.querySelector('#next').addEventListener('click', (e)=> {
 })
 
 
+function resetVue(){
+    alert.classList.toggle('alert-danger',false)
+    alert.classList.toggle('alert-success',false)
+    alert.classList.toggle('alert-info',false)
+    responses[currentButtonCheck].classList.remove('active')
+    currentButtonCheck = 0;
+}
 
+// Initialisation 
+afficherReponse()
