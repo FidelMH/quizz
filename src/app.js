@@ -158,7 +158,7 @@ function resetVue(){
 
 // Initialisation 
 
-getCharactersFromAnime(269).then((datas) =>{
+getCharactersFromAnime(22297).then((datas) =>{
     let charactersNameList=[];
     charactersNameList= datas.map((element) => {
         
